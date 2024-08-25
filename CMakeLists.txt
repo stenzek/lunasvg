@@ -5,10 +5,18 @@ project(lunasvg VERSION 2.4.1 LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 11)
 
+set(CMAKE_C_VISIBILITY_PRESET hidden)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+
 option(BUILD_SHARED_LIBS "Build as a shared library" ON)
 option(LUNASVG_BUILD_EXAMPLES "Build example(s)" OFF)
 
-add_library(lunasvg)
+if(BUILD_SHARED_LIBS)
+  add_library(lunasvg SHARED)
+else()
+  add_library(lunasvg STATIC)
+endif()
 
 add_subdirectory(include)
 add_subdirectory(source)
@@ -25,16 +33,47 @@ if(LUNASVG_BUILD_EXAMPLES)
     target_include_directories(svg2png PRIVATE 3rdparty/stb)
 endif()
 
-set(LUNASVG_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib)
-set(LUNASVG_INCDIR ${CMAKE_INSTALL_PREFIX}/include)
+include(GNUInstallDirs)
 
+if(NOT BUILD_SHARED_LIBS)
+  install(FILES
+      include/lunasvg.h
+      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  )
+endif()
 install(FILES
-    include/lunasvg.h
-    DESTINATION ${LUNASVG_INCDIR}
+    include/lunasvg_c.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 install(TARGETS lunasvg
-    LIBRARY     DESTINATION    ${LUNASVG_LIBDIR}
-    ARCHIVE     DESTINATION    ${LUNASVG_LIBDIR}
-    INCLUDES    DESTINATION    ${LUNASVG_INCDIR}
+    EXPORT      lunasvgTargets
+    RUNTIME     DESTINATION    ${CMAKE_INSTALL_BINDIR}
+    LIBRARY     DESTINATION    ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE     DESTINATION    ${CMAKE_INSTALL_LIBDIR}
+    INCLUDES    DESTINATION    ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+include(CMakePackageConfigHelpers)
+set(LUNASVG_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/lunasvg")
+install(
+  EXPORT lunasvgTargets
+  FILE lunasvgTargets.cmake
+  NAMESPACE lunasvg::
+  DESTINATION "${LUNASVG_INSTALL_CMAKEDIR}"
+)
+configure_package_config_file(lunasvgConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/lunasvgConfig.cmake"
+  INSTALL_DESTINATION "${LUNASVG_INSTALL_CMAKEDIR}"
+)
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/lunasvgConfigVersion.cmake"
+  VERSION "${CMAKE_PROJECT_VERSION}"
+  COMPATIBILITY SameMajorVersion
+)
+install(
+  FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/lunasvgConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/lunasvgConfigVersion.cmake"
+    DESTINATION "${LUNASVG_INSTALL_CMAKEDIR}"
 )

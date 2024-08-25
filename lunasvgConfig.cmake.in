@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/lunasvgTargets.cmake")
+
+check_required_components(lunasvg)
+
+get_target_property(TEMP_LUNASVG_LOCATION lunasvg::lunasvg LOCATION)
+message(STATUS "Found lunasvg: ${TEMP_LUNASVG_LOCATION}")
+unset(TEMP_LUNASVG_LOCATION)

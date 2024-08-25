@@ -28,23 +28,6 @@
 #include <string>
 #include <map>
 
-#if !defined(LUNASVG_BUILD_STATIC) && (defined(_WIN32) || defined(__CYGWIN__))
-#define LUNASVG_EXPORT __declspec(dllexport)
-#define LUNASVG_IMPORT __declspec(dllimport)
-#elif defined(__GNUC__) && (__GNUC__ >= 4)
-#define LUNASVG_EXPORT __attribute__((__visibility__("default")))
-#define LUNASVG_IMPORT
-#else
-#define LUNASVG_EXPORT
-#define LUNASVG_IMPORT
-#endif
-
-#ifdef LUNASVG_BUILD
-#define LUNASVG_API LUNASVG_EXPORT
-#else
-#define LUNASVG_API LUNASVG_IMPORT
-#endif
-
 #define LUNASVG_VERSION_MAJOR 2
 #define LUNASVG_VERSION_MINOR 4
 #define LUNASVG_VERSION_MICRO 1
@@ -61,7 +44,7 @@ namespace lunasvg {
 class Rect;
 class Matrix;
 
-class LUNASVG_API Box {
+class Box {
 public:
     Box() = default;
     Box(double x, double y, double w, double h);
@@ -79,7 +62,7 @@ public:
 
 class Transform;
 
-class LUNASVG_API Matrix {
+class Matrix {
 public:
     Matrix() = default;
     Matrix(double a, double b, double c, double d, double e, double f);
@@ -116,7 +99,7 @@ public:
     double f{0};
 };
 
-class LUNASVG_API Bitmap {
+class Bitmap {
 public:
     /**
      * @note Bitmap format is ARGB32 Premultiplied.
@@ -146,7 +129,7 @@ private:
 
 class Element;
 
-class LUNASVG_API DomElement {
+class DomElement {
 public:
     /**
      * @brief DomElement
@@ -239,7 +222,7 @@ private:
 class LayoutSymbol;
 class SVGElement;
 
-class LUNASVG_API Document {
+class Document {
 public:
     /**
      * @brief Creates a document from a file

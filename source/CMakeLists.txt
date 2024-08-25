@@ -1,6 +1,7 @@
 target_sources(lunasvg 
 PRIVATE
     "${CMAKE_CURRENT_LIST_DIR}/lunasvg.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/lunasvg_c.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/element.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/property.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/parser.cpp"
