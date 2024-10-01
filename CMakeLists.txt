@@ -18,11 +18,11 @@ else()
   add_library(lunasvg STATIC)
 endif()
 
-add_subdirectory(include)
 add_subdirectory(source)
 add_subdirectory(3rdparty/plutovg)
 
 target_compile_definitions(lunasvg PRIVATE LUNASVG_BUILD)
+target_include_directories(lunasvg PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 if(NOT BUILD_SHARED_LIBS)
     target_compile_definitions(lunasvg PRIVATE LUNASVG_BUILD_STATIC)
 endif()
